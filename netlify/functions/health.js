@@ -1,13 +1,14 @@
-export default async () => Response.json({
-  status: "ok",
-  deployment: "netlify",
-  coref_model: {
-    status: "unavailable",
-    load_seconds: null,
-    error: "SpanBERT is available only in the local backend. Netlify uses direct DeepSeek generation.",
-  },
+export const handler = async () => ({
+  statusCode: 200,
+  headers: { "Content-Type": "application/json; charset=utf-8" },
+  body: JSON.stringify({
+    status: "ok",
+    deployment: "netlify",
+    language: "en",
+    character_pipeline: {
+      relik: { enabled: false, installed: false, model: "cloud alias fallback" },
+      deepseek_validation: { configured: false, model: "handled only inside cloud chunk generation" },
+      maverick: { enabled: false, installed: false, model: "not available in Netlify", device: "none" },
+    },
+  }),
 });
-
-export const config = {
-  path: "/api/health",
-};

@@ -1,16 +1,16 @@
 (() => {
   const SVG_NS = "http://www.w3.org/2000/svg";
   const TYPE_CONFIG = {
-    world: { label: "世界", color: "#183f47" },
-    character: { label: "人物", color: "#2f7d8a" },
-    location: { label: "地点", color: "#608a5e" },
-    faction: { label: "阵营", color: "#9b6a3f" },
-    item: { label: "物品 / 线索", color: "#b28a2e" },
-    event: { label: "事件", color: "#7665a8" },
-    quest: { label: "任务", color: "#b05266" },
-    thread: { label: "开放线索", color: "#ad7045" },
-    context: { label: "全局语境", color: "#4f778c" },
-    external: { label: "外部实体", color: "#7a7f80" },
+    world: { label: "World", color: "#183f47" },
+    character: { label: "Character", color: "#2f7d8a" },
+    location: { label: "Location", color: "#608a5e" },
+    faction: { label: "Faction", color: "#9b6a3f" },
+    item: { label: "Item / Clue", color: "#b28a2e" },
+    event: { label: "Event", color: "#7665a8" },
+    quest: { label: "Quest", color: "#b05266" },
+    thread: { label: "Open Thread", color: "#ad7045" },
+    context: { label: "Global Context", color: "#4f778c" },
+    external: { label: "External Entity", color: "#7a7f80" },
   };
 
   const state = {
@@ -82,43 +82,43 @@
     collections.forEach(([field, type]) => {
       (Array.isArray(worldState[field]) ? worldState[field] : []).forEach((entry, index) => {
         const node = addNode(type, displayName(entry, `${TYPE_CONFIG[type].label} ${index + 1}`), entry, index);
-        addEdge(root.id, node.id, "包含", "scope");
+        addEdge(root.id, node.id, "contains", "scope");
       });
     });
 
     (Array.isArray(worldState.timeline) ? worldState.timeline : []).forEach((entry, index) => {
-      const node = addNode("event", `事件 ${index + 1}`, { description: entry, order: index + 1 }, index);
-      addEdge(root.id, node.id, "时间线", "scope");
-      if (index > 0) addEdge(`event:${index - 1}`, node.id, "先于", "sequence");
+      const node = addNode("event", `Event ${index + 1}`, { description: entry, order: index + 1 }, index);
+      addEdge(root.id, node.id, "timeline", "scope");
+      if (index > 0) addEdge(`event:${index - 1}`, node.id, "precedes", "sequence");
     });
 
     (Array.isArray(worldState.open_threads) ? worldState.open_threads : []).forEach((entry, index) => {
-      const node = addNode("thread", `开放线索 ${index + 1}`, { description: entry }, index);
-      addEdge(root.id, node.id, "待解决", "scope");
+      const node = addNode("thread", `Open Thread ${index + 1}`, { description: entry }, index);
+      addEdge(root.id, node.id, "unresolved", "scope");
     });
 
     if (worldState.context_variables && typeof worldState.context_variables === "object") {
-      const node = addNode("context", "全局语境", worldState.context_variables, "global");
-      addEdge(root.id, node.id, "约束", "scope");
+      const node = addNode("context", "Global Context", worldState.context_variables, "global");
+      addEdge(root.id, node.id, "constrains", "scope");
     }
 
     function findOrCreate(label) {
       const normalized = text(label).toLocaleLowerCase();
       if (!normalized) return null;
       if (labelIndex.has(normalized)) return labelIndex.get(normalized);
-      return addNode("external", text(label), { description: "由关系字段引用，但未在实体列表中定义。" }).id;
+      return addNode("external", text(label), { description: "Referenced by a relation but not defined in an entity collection." }).id;
     }
 
     (Array.isArray(worldState.relationships) ? worldState.relationships : []).forEach((relation) => {
       addEdge(
         findOrCreate(relation?.source),
         findOrCreate(relation?.target),
-        text(relation?.relation) || "关联"
+        text(relation?.relation) || "related to"
       );
     });
 
     (Array.isArray(worldState.items) ? worldState.items : []).forEach((item, index) => {
-      addEdge(`item:${index}`, findOrCreate(item?.owner), "属于");
+      addEdge(`item:${index}`, findOrCreate(item?.owner), "belongs to");
     });
 
     return { nodes, edges };
@@ -263,9 +263,9 @@
     });
 
     elements.empty.hidden = state.graph.nodes.length > 0;
-    elements.count.textContent = `${visibleNodes.size} 个节点 · ${
+    elements.count.textContent = `${visibleNodes.size} nodes · ${
       state.graph.edges.filter((edge) => visibleNodes.has(edge.source) && visibleNodes.has(edge.target)).length
-    } 条连接`;
+    } connections`;
   }
 
   function selectNode(id) {
@@ -452,7 +452,7 @@
         });
         viewport.appendChild(group);
       });
-      count.textContent = `${shown.size} 个节点 · ${graph.edges.filter((edge) => shown.has(edge.source) && shown.has(edge.target)).length} 条连接`;
+    count.textContent = `${shown.size} nodes · ${graph.edges.filter((edge) => shown.has(edge.source) && shown.has(edge.target)).length} connections`;
     }
 
     function graphPoint(event) {
@@ -504,7 +504,7 @@
     const app = runOfflineGraph.toString();
     return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>World Status 交互知识图谱</title>
+<title>World Status Interactive Knowledge Graph</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#e9eef0;color:#15272b;font-family:"Microsoft YaHei","Segoe UI",sans-serif}
 header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;background:#fbfaf5;border-bottom:1px solid #bdc9c9}
@@ -517,8 +517,8 @@ input,button{padding:9px 11px;border:1px solid #0a6871;border-radius:6px;backgro
 .node{cursor:pointer}.node circle:not(.halo){stroke:#fff;stroke-width:3;filter:drop-shadow(0 4px 7px rgba(22,46,50,.27))}.node .halo{fill:rgba(255,255,255,.72);stroke:rgba(10,104,113,.13)}.node.selected circle:not(.halo){stroke:#f0b84a;stroke-width:5}.node text{fill:#15272b;font-size:12px;font-weight:700;paint-order:stroke;stroke:#f7faf8;stroke-width:5px}
 @media(max-width:800px){header{align-items:flex-start;flex-direction:column}.workspace{grid-template-columns:1fr;height:auto}.main{height:70vh}.detail{border-top:1px solid #bdc9c9;border-left:0}}
 </style></head><body>
-<header><div><h1>World Status 交互知识图谱</h1><p id="count">正在载入图谱</p></div><div class="tools"><input id="search" type="search" placeholder="搜索节点或属性"><button id="reset">重置视图</button></div></header>
-<main class="workspace"><section class="main"><div id="legend" class="legend"></div><svg id="graph"><g id="viewport"></g></svg></section><aside id="detail" class="detail"><span class="type">节点详情</span><h2>点击节点查看详情</h2><p>滚轮缩放，拖动空白处平移，拖动节点调整布局。</p></aside></main>
+<header><div><h1>World Status Interactive Knowledge Graph</h1><p id="count">Loading graph</p></div><div class="tools"><input id="search" type="search" placeholder="Search nodes or properties"><button id="reset">Reset View</button></div></header>
+<main class="workspace"><section class="main"><div id="legend" class="legend"></div><svg id="graph"><g id="viewport"></g></svg></section><aside id="detail" class="detail"><span class="type">Node Details</span><h2>Select a node</h2><p>Scroll to zoom, drag empty space to pan, and drag nodes to adjust the layout.</p></aside></main>
 <script>const payload=${payload};(${app})(payload);<\/script></body></html>`;
   }
 

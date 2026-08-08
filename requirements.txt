@@ -1,5 +1,3 @@
-allennlp
-allennlp-models
 fastapi<0.100
 pydantic<1.9
 python-dotenv

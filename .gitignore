@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 trpg_env/
+node_modules/
 nltk_data/
 uvicorn.*.log
 *.log
@@ -9,6 +10,13 @@ TRPG-World-Status-source.zip
 TRPG-World-Status-source/
 data/*
 !data/.gitkeep
+!data/the_dead_characters.json
+.env.character
 
 # Local Netlify folder
 .netlify
+
+# Local agent tooling and generated QA artifacts
+.agents/
+skills-lock.json
+tmp/

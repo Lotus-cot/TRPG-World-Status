@@ -5,9 +5,11 @@ import json
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional, Sequence
 
 from utils.llm_engine import generate_world_state
-from utils.text_processor import coref_resolve_many, preprocess_text, split_text
+from utils.character_pipeline import compact_character_context, run_character_pipeline
+from utils.text_processor import preprocess_text, split_text
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,24 +18,32 @@ OUTPUT_FILE = BASE_DIR / "data" / "trpg_output.json"
 
 
 @lru_cache(maxsize=16)
-def _run_pipeline_cached(text, max_chars):
+def _run_pipeline_cached(text, max_chars, character_names):
     chunks = split_text(text, max_chars=max_chars)
-    resolved_chunks = coref_resolve_many(chunks)
-    resolved_text = "\n\n".join(resolved_chunks)
-    llm_result = generate_world_state(resolved_text)
+    character_resolution = run_character_pipeline(text, character_names)
+    resolved_text = character_resolution["annotated_text"]
+    resolved_chunks = split_text(resolved_text, max_chars=max_chars)
+    llm_result = generate_world_state(
+        resolved_text,
+        character_context=compact_character_context(character_resolution),
+    )
 
     return {
+        "language": "en",
+        "source_text": text,
         "input_chunks": chunks,
         "resolved_chunks": resolved_chunks,
         "resolved_text": resolved_text,
+        "character_resolution": character_resolution,
         "world_state": llm_result["world_state"],
         "model": llm_result["model"],
         "usage": llm_result["usage"],
     }
 
 
-def run_pipeline_from_text(text, max_chars=1200):
-    return deepcopy(_run_pipeline_cached(text, max_chars))
+def run_pipeline_from_text(text, max_chars=1200, character_names: Optional[Sequence[str]] = None):
+    roster = tuple(str(name).strip() for name in (character_names or []) if str(name).strip())
+    return deepcopy(_run_pipeline_cached(text, max_chars, roster))
 
 
 def run_pipeline(input_file=DATA_FILE, output_file=OUTPUT_FILE):
