@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TRPG World Status</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260609-3" />
+    <link rel="stylesheet" href="./styles.css?v=20260725-2" />
   </head>
   <body>
     <div id="snowfield" class="snowfield" aria-hidden="true"></div>
@@ -12,107 +12,356 @@
       <section class="workspace">
         <header class="topbar">
           <div>
-            <p class="eyebrow">AllenNLP + DeepSeek · 三层叙事本体</p>
+            <p class="eyebrow">Character Linking + Coreference + DeepSeek · Three-Layer Narrative Ontology</p>
             <h1>TRPG World Status</h1>
             <p class="subtitle">
-              输入英文叙事文本，先进行共指消解，再生成兼顾文学阐释与 TRPG 改编的本体化世界状态。
-              首次加载 SpanBERT 可能需要数分钟，请保持页面打开。
+              Process English narrative prose through a book-scale character pipeline, then generate a
+              faithful, playable World Status for literary interpretation and TRPG adaptation.
             </p>
           </div>
-          <div id="health" class="status">检查服务中</div>
+          <div id="health" class="status">Checking service</div>
         </header>
 
-        <section class="ontology-strip" aria-label="按本体层次筛选世界状态">
+        <section class="ontology-strip" aria-label="Filter World Status by ontology layer">
           <button class="ontology-level ontology-tab" type="button" data-world-view="micro">
-            <span>微观层</span>
-            <strong>人物与线索</strong>
+            <span>Micro Layer</span>
+            <strong>Characters and Clues</strong>
             <p>Character · NarrativeObject / Clue · hasOwner · evokesMemory</p>
           </button>
           <button class="ontology-level ontology-tab" type="button" data-world-view="meso">
-            <span>中观层</span>
-            <strong>关系、群体与空间</strong>
+            <span>Meso Layer</span>
+            <strong>Relations, Groups, and Space</strong>
             <p>CollectiveAgent · Place · hasSocialRelationWith · belongsToCollective</p>
           </button>
           <button class="ontology-level ontology-tab" type="button" data-world-view="macro">
-            <span>宏观层</span>
-            <strong>事件、任务与演化</strong>
+            <span>Macro Layer</span>
+            <strong>Events, Quests, and Change</strong>
             <p>NarrativeEvent · Quest · OpenThread · precedes · containsQuest</p>
           </button>
           <button class="ontology-context ontology-tab" type="button" data-world-view="context">
-            <span>全局语境变量</span>
+            <span>Global Context</span>
             <strong>atmosphere · scene_state</strong>
-            <p>作为场景基调和当前整体条件，不作为独立概念类。</p>
+            <p>Scene-level tone and current conditions, not independent concept classes.</p>
           </button>
         </section>
 
         <section class="storage-panel">
           <div>
-            <p id="saveStatus" class="save-status">尚无已保存快照。</p>
+            <p id="saveStatus" class="save-status">No saved snapshot.</p>
             <p class="storage-help">
-              快照只保存在当前浏览器，读取快照不会再次调用 DeepSeek。
+              Snapshots remain in this browser. Loading one does not call DeepSeek again.
             </p>
             <p id="storageNotice" class="notice" hidden></p>
           </div>
 
           <div class="storage-actions">
-            <button id="saveButton" type="button" disabled>保存快照</button>
-            <button id="loadButton" type="button" disabled>载入上次结果</button>
-            <button id="clearButton" type="button" disabled>清空</button>
-            <button id="downloadJsonButton" type="button" disabled>下载 JSON</button>
-            <button id="downloadTxtButton" type="button" disabled>下载共指文本</button>
+            <button id="saveButton" type="button" disabled>Save Snapshot</button>
+            <button id="loadButton" type="button" disabled>Load Last Result</button>
+            <button id="clearButton" type="button" disabled>Clear</button>
+            <button id="downloadJsonButton" type="button" disabled>Download JSON</button>
+            <button id="downloadTxtButton" type="button" disabled>Download Annotated Text</button>
           </div>
         </section>
 
         <div class="editor-grid">
           <section class="panel input-panel">
             <div class="panel-head">
-              <h2>原文本</h2>
+              <h2>English Source</h2>
               <label class="file-button">
                 <input id="fileInput" type="file" accept=".txt,text/plain,.md,text/markdown" />
-                读取文本
+                Open Text File
               </label>
             </div>
             <textarea
               id="sourceText"
               spellcheck="false"
-              placeholder="粘贴 The Dead 或其他英文叙事文本..."
+              placeholder="Paste The Dead or another English narrative..."
             ></textarea>
+            <label class="roster-input">
+              <span>Character Roster <small>The Dead registry is loaded by default; entries here override it</small></span>
+              <textarea id="characterRoster" rows="5" spellcheck="false" placeholder="Leave blank to use the fixed The Dead character registry"></textarea>
+            </label>
             <div class="controls">
               <label>
-                共指分块
+                Generation Chunk Size
                 <input id="maxChars" type="number" min="300" max="3000" step="100" value="1200" />
               </label>
-              <button id="runButton" type="button">生成本体化世界状态</button>
+              <button id="analyzeCharactersButton" type="button" disabled>Analyze Characters</button>
+              <button id="runButton" type="button" disabled>Waiting for Service</button>
             </div>
           </section>
 
           <section class="panel output-panel">
             <div class="panel-head">
               <div>
-                <h2>本体化世界状态 JSON</h2>
-                <p id="worldViewDescription" class="panel-note">当前显示：完整 JSON</p>
+                <h2>Ontologized World Status JSON</h2>
+                <p id="worldViewDescription" class="panel-note">Current view: Full JSON</p>
               </div>
               <div class="output-actions">
                 <button id="fullJsonButton" class="view-button active" type="button" data-world-view="full">
-                  完整 JSON
+                  Full JSON
                 </button>
-                <button id="copyButton" type="button" disabled>复制当前视图</button>
+                <button id="copyButton" type="button" disabled>Copy Current View</button>
               </div>
             </div>
             <pre id="output">{}</pre>
           </section>
         </div>
 
+        <section id="characterPanel" class="panel character-panel">
+          <div class="panel-head">
+            <div>
+              <h2>English Character Resolution</h2>
+              <p class="panel-note">The Dead registry -&gt; ReLiK reader -&gt; DeepSeek ambiguity resolution -&gt; Maverick coreference -&gt; stable identity merge</p>
+            </div>
+            <div class="section-actions">
+              <span id="characterCount" class="acts-count">Waiting for character data</span>
+              <button id="downloadCharactersButton" type="button" disabled>Export Character Clusters</button>
+            </div>
+          </div>
+          <div id="characterStages" class="character-stages"></div>
+          <div id="characterOutput" class="character-output"></div>
+        </section>
+
+        <section id="actsPanel" class="panel acts-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Act-by-Act Scenario</h2>
+              <p class="panel-note">Detailed playable scenes organized by dramatic turns</p>
+            </div>
+            <div class="section-actions">
+              <span id="actsCount" class="acts-count">Waiting for acts</span>
+              <button id="downloadActsButton" type="button" disabled>Export Acts JSON</button>
+            </div>
+          </div>
+          <div id="actsOutput" class="acts-output"></div>
+        </section>
+
+        <section id="soloGamePanel" class="panel game-panel">
+          <div class="panel-head game-panel-head">
+            <div>
+              <p class="game-kicker">SOLO SESSION · LITERARY INTERPRETATION DICE</p>
+              <h2>Solo Session</h2>
+              <p id="gameModuleHint" class="panel-note">Generate or import World Status JSON before starting a session.</p>
+            </div>
+            <div class="game-session-tools">
+              <span id="gameStatus" class="game-status">Not started</span>
+              <button id="gameExportLogButton" type="button" disabled>Export Log</button>
+              <button id="gameExportSessionButton" type="button" disabled>Export Session</button>
+              <label class="file-button">
+                <input id="gameImportInput" type="file" accept=".json,application/json" />
+                Import Session
+              </label>
+              <button id="gameClearButton" class="game-danger-button" type="button" disabled>Clear Session</button>
+            </div>
+          </div>
+
+          <div class="game-setup">
+            <div>
+              <span class="game-field-label">Player Character</span>
+              <select id="gameCharacterSelect">
+                <option value="">Select a player character</option>
+              </select>
+            </div>
+            <button id="gameStartButton" type="button" disabled>Start New Solo Session</button>
+            <p id="gameNotice" class="game-notice" hidden></p>
+          </div>
+
+          <section class="game-qq-card" aria-labelledby="gameQQTitle">
+            <div>
+              <span class="game-card-label">QQ PLAY BRIDGE</span>
+              <strong id="gameQQTitle">Connect this session to a QQ chat</strong>
+              <p id="gameQQStatus">Checking the local QQ adapter...</p>
+            </div>
+            <div class="game-qq-pairing">
+              <span>Six-digit pairing code</span>
+              <code id="gamePairingCode">------</code>
+              <button id="gameCopyPairingButton" class="game-secondary-button" type="button" disabled>Copy Code</button>
+              <button id="gameRefreshPairingButton" class="game-secondary-button" type="button" disabled>New Code</button>
+            </div>
+            <div class="game-qq-instructions">
+              <span id="gameQQBinding">No QQ chat is linked.</span>
+              <small>In QQ, send <code>.ws bind 123456</code>, then <code>.ws pc Character Name</code>.</small>
+            </div>
+          </section>
+
+          <div id="gameEmpty" class="game-empty-state">
+            <strong>The story is structured, but the session has not started.</strong>
+            <p>Select a character to enter the first scene. Every action is rolled, adjudicated, applied, and logged.</p>
+          </div>
+
+          <div id="gameWorkspace" class="game-workspace" hidden>
+            <article class="game-stage-card">
+              <header>
+                <span id="gameActLabel">Act 1</span>
+                <h3 id="gameSceneTitle">Waiting for scene</h3>
+                <p id="gameSceneMeta"></p>
+              </header>
+              <div class="game-stage-body">
+                <div class="game-scene-lead">
+                  <span>Current Objective</span>
+                  <p id="gameSceneObjective"></p>
+                </div>
+                <p id="gameSceneConflict" class="game-scene-conflict"></p>
+                <div class="game-stage-group">
+                  <strong>Participants</strong>
+                  <div id="gameParticipants" class="game-chips"></div>
+                </div>
+                <div class="game-stage-group">
+                  <strong>Scene Beats</strong>
+                  <div id="gameBeats" class="game-chips subdued"></div>
+                </div>
+                <div class="game-stage-group game-clue-drawer">
+                  <strong>Discovered Clues</strong>
+                  <div id="gameClues" class="game-chips"></div>
+                </div>
+              </div>
+            </article>
+
+            <aside class="game-character-card">
+              <span class="game-card-label">CHARACTER DOSSIER</span>
+              <h3 id="gameCharacterName">Player Character</h3>
+              <p id="gameCharacterDescription"></p>
+              <p id="gameCharacterState" class="game-character-state"></p>
+              <div id="gameTraits" class="game-traits"></div>
+              <div id="gameMeters" class="game-meters"></div>
+            </aside>
+
+            <form id="gameActionForm" class="game-action-card">
+              <div class="game-action-heading">
+                <div>
+                  <span class="game-card-label">DECLARE AN ACTION</span>
+                  <h3>What do you do?</h3>
+                </div>
+                <label class="game-ai-toggle">
+                  <input id="gameAiNarration" type="checkbox" checked />
+                  AI narration only
+                </label>
+              </div>
+              <section class="game-inspiration-box" aria-labelledby="gameInspirationTitle">
+                <div>
+                  <span class="game-card-label">PLAYER INSPIRATION</span>
+                  <strong id="gameInspirationTitle">Unsure what to do?</strong>
+                  <p>Ask for three possible actions. Suggestions never roll dice or change the world until you adopt and submit one.</p>
+                </div>
+                <div class="game-inspiration-controls">
+                  <select id="gameInspirationMode" aria-label="Inspiration direction">
+                    <option value="general">General</option>
+                    <option value="investigate">Investigation</option>
+                    <option value="social">Social</option>
+                    <option value="bold">High risk</option>
+                  </select>
+                  <button id="gameInspirationButton" class="game-secondary-button" type="button">Give Me 3 Ideas</button>
+                </div>
+                <div id="gameInspirationCards" class="game-inspiration-cards">
+                  <p class="game-muted">Ideas will appear here and can be adopted into the action form.</p>
+                </div>
+              </section>
+              <div class="game-action-grid">
+                <label>
+                  <span>Action Type</span>
+                  <select id="gameActionType">
+                    <option value="observe">Observe · Insight</option>
+                    <option value="investigate">Investigate · Insight</option>
+                    <option value="empathize">Empathize · Empathy</option>
+                    <option value="persuade">Persuade · Empathy</option>
+                    <option value="recall">Recall · Insight</option>
+                    <option value="confront">Confront · Resolve</option>
+                    <option value="conceal">Conceal · Resolve</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Target</span>
+                  <select id="gameTargetSelect">
+                    <option value="">Select a target (optional)</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Difficulty</span>
+                  <select id="gameDifficulty">
+                    <option value="8">8 · Easy</option>
+                    <option value="10">10 · Standard</option>
+                    <option value="12" selected>12 · Pressured</option>
+                    <option value="14">14 · Hard</option>
+                    <option value="16">16 · Extreme</option>
+                  </select>
+                </label>
+              </div>
+              <label class="game-action-text">
+                <span>Declared Action</span>
+                <textarea id="gameActionText" rows="3" placeholder="Example: I watch Gretta's reaction to the old song and try to understand what she is avoiding."></textarea>
+              </label>
+              <div class="game-action-buttons">
+                <button id="gameRollButton" type="submit">Roll and Resolve</button>
+                <button id="gameAdvanceButton" class="game-secondary-button" type="button">Advance to Next Scene</button>
+              </div>
+            </form>
+
+            <section id="gameResult" class="game-result-card" aria-live="polite">
+              <p class="game-result-empty">Submit an action to see the roll, ruling, state changes, and narration.</p>
+            </section>
+
+            <section class="game-log-card">
+              <div class="game-log-heading">
+                <div>
+                  <span class="game-card-label">SESSION LEDGER</span>
+                  <h3>Session Ledger</h3>
+                </div>
+                <small>Latest 12 entries · full record available for export</small>
+              </div>
+              <div id="gameLog" class="game-log"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel graph-panel">
+          <div class="panel-head graph-head">
+            <div>
+              <h2>Interactive Knowledge Graph</h2>
+              <p id="graphCount" class="panel-note">Waiting for World Status JSON</p>
+            </div>
+            <div class="graph-actions">
+              <label class="file-button">
+                <input id="graphFileInput" type="file" accept=".json,application/json" />
+                Import World Status JSON
+              </label>
+              <input id="graphSearch" type="search" placeholder="Search nodes or properties" />
+              <button id="graphResetButton" type="button">Reset View</button>
+              <button id="downloadGraphButton" type="button" disabled>Export Graph SVG</button>
+              <button id="downloadInteractiveGraphButton" type="button" disabled>Export Interactive HTML</button>
+            </div>
+          </div>
+          <div id="graphLegend" class="graph-legend" aria-label="Filter graph node types"></div>
+          <div class="graph-workspace">
+            <div id="graphCanvas" class="graph-canvas">
+              <svg id="graphSvg" aria-label="World Status interactive knowledge graph">
+                <g id="graphViewport"></g>
+              </svg>
+              <p id="graphEmpty" class="graph-empty">Generate, load, or import World Status JSON to display the graph.</p>
+            </div>
+            <aside class="graph-detail">
+              <span id="graphDetailType">Node Details</span>
+              <h3 id="graphDetailTitle">Select a graph node</h3>
+              <div id="graphDetailBody">
+                <p>Characters, locations, factions, items, events, quests, and open threads are connected from the same World Status JSON.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
         <section class="panel resolved-panel">
           <div class="panel-head">
-            <h2>共指消解结果</h2>
+            <h2>Coreference-Annotated English Text</h2>
             <span id="meta"></span>
           </div>
-          <pre id="resolvedOutput">等待生成</pre>
+          <pre id="resolvedOutput">Waiting for generation</pre>
         </section>
       </section>
     </main>
 
-    <script src="/static/app.js?v=20260609-4"></script>
+    <script src="./graph.js?v=20260725-2"></script>
+    <script src="./game.js?v=20260725-2"></script>
+    <script src="./world-state-client.js?v=20260731-3"></script>
+    <script src="./app.js?v=20260731-3"></script>
   </body>
 </html>

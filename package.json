@@ -1,0 +1,13 @@
+{
+  "name": "trpg-world-status-netlify",
+  "private": true,
+  "scripts": {
+    "build:blobs-vendor": "esbuild node_modules/@netlify/blobs/dist/main.js --bundle --platform=node --format=esm --outfile=netlify/functions/_vendor/netlify-blobs.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "10.7.11"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}

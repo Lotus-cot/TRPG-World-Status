@@ -1,0 +1,247 @@
+{
+  "work_id": "james-joyce-the-dead",
+  "title": "The Dead",
+  "author": "James Joyce",
+  "language": "en",
+  "sources": [
+    "https://www.gutenberg.org/files/2814/2814-h/2814-h.htm#chap15",
+    "https://www.sparknotes.com/short-stories/the-dead/characters/",
+    "https://www.litcharts.com/lit/the-dead/characters"
+  ],
+  "characters": [
+    {
+      "id": "the-dead:character:gabriel-conroy",
+      "name": "Gabriel Conroy",
+      "aliases": ["Gabriel", "Mr. Conroy", "Mr Conroy"],
+      "contextual_aliases": ["Gretta's husband", "her husband", "their favourite nephew", "their favorite nephew"],
+      "entity_type": "person",
+      "prominence": "protagonist",
+      "description": "Teacher, literary reviewer, nephew of Kate and Julia, and Gretta's husband."
+    },
+    {
+      "id": "the-dead:character:gretta-conroy",
+      "name": "Gretta Conroy",
+      "aliases": ["Gretta", "Mrs. Conroy", "Mrs Conroy"],
+      "contextual_aliases": ["Gabriel's wife", "his wife"],
+      "entity_type": "person",
+      "prominence": "principal",
+      "description": "Gabriel's wife, whose memory of Michael Furey transforms the final scene."
+    },
+    {
+      "id": "the-dead:character:kate-morkan",
+      "name": "Kate Morkan",
+      "aliases": ["Kate", "Aunt Kate", "Miss Kate"],
+      "contextual_aliases": ["Miss Morkan", "Gabriel's aunt", "his aunt"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "One of the Morkan sisters who hosts the annual dance."
+    },
+    {
+      "id": "the-dead:character:julia-morkan",
+      "name": "Julia Morkan",
+      "aliases": ["Julia", "Aunt Julia", "Miss Julia"],
+      "contextual_aliases": ["Miss Morkan", "Gabriel's aunt", "his aunt"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "Kate's sister, a singer in the Adam and Eve's church choir and co-host of the dance."
+    },
+    {
+      "id": "the-dead:character:mary-jane-morkan",
+      "name": "Mary Jane Morkan",
+      "aliases": ["Mary Jane"],
+      "contextual_aliases": ["Miss Morkan", "their niece"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "Kate and Julia's niece, an organ teacher and co-host of the dance."
+    },
+    {
+      "id": "the-dead:character:lily",
+      "name": "Lily",
+      "aliases": [],
+      "contextual_aliases": ["the caretaker's daughter", "the caretaker’s daughter"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "The caretaker's daughter who receives the guests and speaks sharply to Gabriel."
+    },
+    {
+      "id": "the-dead:character:molly-ivors",
+      "name": "Molly Ivors",
+      "aliases": ["Molly", "Miss Ivors"],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "Gabriel's colleague and an Irish nationalist who challenges his cultural loyalties."
+    },
+    {
+      "id": "the-dead:character:mr-browne",
+      "name": "Mr. Browne",
+      "aliases": ["Mr Browne", "Browne"],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "A convivial guest at the Morkans' annual dance."
+    },
+    {
+      "id": "the-dead:character:freddy-malins",
+      "name": "Freddy Malins",
+      "aliases": ["Freddy", "Mr. Malins", "Mr Malins"],
+      "contextual_aliases": ["Mrs. Malins's son", "Mrs Malins's son", "her son"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "A family friend whose drunken arrival worries the hosts."
+    },
+    {
+      "id": "the-dead:character:mrs-malins",
+      "name": "Mrs. Malins",
+      "aliases": ["Mrs Malins"],
+      "contextual_aliases": ["Freddy's mother", "Freddy Malins's mother", "his mother"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "Freddy Malins's mother, visiting from Glasgow."
+    },
+    {
+      "id": "the-dead:character:bartell-darcy",
+      "name": "Bartell D'Arcy",
+      "aliases": ["Bartell", "D'Arcy", "Mr. D'Arcy", "Mr D'Arcy", "Mr. Bartell D'Arcy", "Mr Bartell D'Arcy"],
+      "contextual_aliases": ["the tenor"],
+      "entity_type": "person",
+      "prominence": "supporting",
+      "description": "The tenor whose singing of The Lass of Aughrim awakens Gretta's memory."
+    },
+    {
+      "id": "the-dead:character:michael-furey",
+      "name": "Michael Furey",
+      "aliases": ["Michael", "Michael Furey"],
+      "contextual_aliases": ["the boy in the gasworks", "the boy", "the young man", "her lover"],
+      "entity_type": "person",
+      "prominence": "principal-remembered",
+      "description": "Gretta's deceased youthful love from Galway."
+    },
+    {
+      "id": "the-dead:character:miss-daly",
+      "name": "Miss Daly",
+      "aliases": [],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "A guest who plays for the dancing and later carves the ham."
+    },
+    {
+      "id": "the-dead:character:miss-power",
+      "name": "Miss Power",
+      "aliases": [],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "A guest at the Morkans' dance."
+    },
+    {
+      "id": "the-dead:character:miss-furlong",
+      "name": "Miss Furlong",
+      "aliases": [],
+      "contextual_aliases": ["Mary Jane's pupil", "one of Mary Jane's pupils"],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "One of Mary Jane's pupils and a guest at the dance."
+    },
+    {
+      "id": "the-dead:character:mr-kerrigan",
+      "name": "Mr. Kerrigan",
+      "aliases": ["Mr Kerrigan", "Kerrigan"],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "A young male guest and dance partner."
+    },
+    {
+      "id": "the-dead:character:mr-bergin",
+      "name": "Mr. Bergin",
+      "aliases": ["Mr Bergin", "Bergin"],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "A young male guest and dance partner."
+    },
+    {
+      "id": "the-dead:character:miss-ocallaghan",
+      "name": "Miss O'Callaghan",
+      "aliases": ["Miss O’Callaghan", "O'Callaghan", "O’Callaghan"],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "minor",
+      "description": "A guest who leaves with Bartell D'Arcy and the Conroys."
+    },
+    {
+      "id": "the-dead:character:ellen-conroy",
+      "name": "Ellen Conroy",
+      "aliases": ["Ellen"],
+      "contextual_aliases": ["Gabriel's mother", "his mother", "their dead elder sister", "their elder sister"],
+      "entity_type": "person",
+      "prominence": "remembered",
+      "description": "Gabriel and Constantine's deceased mother and the elder Morkan sister."
+    },
+    {
+      "id": "the-dead:character:tj-conroy",
+      "name": "T. J. Conroy",
+      "aliases": ["T.J. Conroy", "T J Conroy"],
+      "contextual_aliases": ["Gabriel's father", "his father"],
+      "entity_type": "person",
+      "prominence": "mentioned",
+      "description": "Ellen's husband and Gabriel and Constantine's father."
+    },
+    {
+      "id": "the-dead:character:constantine-conroy",
+      "name": "Constantine Conroy",
+      "aliases": ["Constantine"],
+      "contextual_aliases": ["Gabriel's brother", "his brother"],
+      "entity_type": "person",
+      "prominence": "remembered",
+      "description": "Gabriel's brother, a senior curate in Balbriggan."
+    },
+    {
+      "id": "the-dead:character:patrick-morkan",
+      "name": "Patrick Morkan",
+      "aliases": [],
+      "contextual_aliases": ["the old gentleman", "our grandfather", "their grandfather", "Gabriel's grandfather", "his grandfather"],
+      "entity_type": "person",
+      "prominence": "remembered",
+      "description": "The deceased Morkan grandfather remembered through the story of his horse Johnny."
+    },
+    {
+      "id": "the-dead:character:tom-conroy",
+      "name": "Tom Conroy",
+      "aliases": ["Tom"],
+      "contextual_aliases": ["Gabriel's son", "Gretta's son", "their son"],
+      "entity_type": "person",
+      "prominence": "mentioned",
+      "description": "One of Gabriel and Gretta's children."
+    },
+    {
+      "id": "the-dead:character:eva-conroy",
+      "name": "Eva Conroy",
+      "aliases": ["Eva"],
+      "contextual_aliases": ["Gabriel's daughter", "Gretta's daughter", "their daughter"],
+      "entity_type": "person",
+      "prominence": "mentioned",
+      "description": "One of Gabriel and Gretta's children."
+    },
+    {
+      "id": "the-dead:character:bessie",
+      "name": "Bessie",
+      "aliases": [],
+      "contextual_aliases": [],
+      "entity_type": "person",
+      "prominence": "mentioned",
+      "description": "The person trusted to look after Gabriel and Gretta's children."
+    },
+    {
+      "id": "the-dead:character:johnny",
+      "name": "Johnny",
+      "aliases": [],
+      "contextual_aliases": ["Patrick Morkan's horse", "the old gentleman's horse", "his horse"],
+      "entity_type": "animal",
+      "prominence": "remembered",
+      "description": "Patrick Morkan's horse, remembered in Gabriel's comic family story."
+    }
+  ]
+}

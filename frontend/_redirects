@@ -1,0 +1,4 @@
+/api/health /.netlify/functions/health 200!
+/api/world-state /.netlify/functions/world-state 200!
+/api/narrate-turn /.netlify/functions/narrate-turn 200!
+/static/* /:splat 200

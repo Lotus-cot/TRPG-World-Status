@@ -1,0 +1,4 @@
+# Legacy AllenNLP/SpanBERT support. The v2 English character pipeline no longer
+# loads this model during application startup.
+allennlp
+allennlp-models

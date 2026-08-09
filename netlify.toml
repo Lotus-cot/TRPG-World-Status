@@ -1,0 +1,37 @@
+[build]
+  publish = "frontend"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[functions."world-state-background"]
+  background = true
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/world-state"
+  to = "/.netlify/functions/world-state"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/narrate-turn"
+  to = "/.netlify/functions/narrate-turn"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/static/*"
+  to = "/:splat"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"

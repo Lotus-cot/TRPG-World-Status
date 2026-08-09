@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from functools import lru_cache
+from importlib.util import find_spec
 from pathlib import Path
 import json
 import os
@@ -11,6 +12,19 @@ import re
 BASE_DIR = Path(__file__).resolve().parents[1]
 COREF_MODEL_PATH = BASE_DIR / "data" / "coref-spanbert-large-2021.03.10.tar.gz"
 DEFAULT_TRANSFORMER_MODEL_PATH = BASE_DIR / "data" / "spanbert-large-cased"
+
+
+def get_coref_unavailable_reason():
+    """Return why SpanBERT cannot run, or ``None`` when prerequisites exist."""
+    try:
+        if find_spec("allennlp") is None:
+            return "AllenNLP is not installed in the active Python environment."
+    except (ImportError, ValueError):
+        return "AllenNLP cannot be imported from the active Python environment."
+
+    if not COREF_MODEL_PATH.exists():
+        return f"Coreference model not found: {COREF_MODEL_PATH}"
+    return None
 
 
 @lru_cache(maxsize=1)
@@ -34,10 +48,12 @@ def get_coref_predictor():
             }
         )
 
+    cuda_device = int(os.getenv("COREF_CUDA_DEVICE", "-1"))
+
     return Predictor.from_path(
         str(COREF_MODEL_PATH),
         predictor_name="coreference_resolution",
-        cuda_device=-1,
+        cuda_device=cuda_device,
         overrides=overrides,
     )
 
@@ -94,8 +110,8 @@ ABBREVIATIONS = {
     "U.K.",
 }
 
-CLOSING_QUOTES = {'"', "'", "”", "’", "』", "」", "》", "）", ")", "]", "}"}
-SENTENCE_ENDINGS = ".!?。！？"
+CLOSING_QUOTES = {'"', "'", "\u2019", "\u201d", ")", "]", "}"}
+SENTENCE_ENDINGS = ".!?"
 
 
 def local_sentence_tokenize(text):
@@ -173,7 +189,7 @@ def _is_sentence_boundary(text, index):
     if index >= len(text):
         return True
 
-    if index > 0 and text[index - 1] in "。！？":
+    if index > 0 and text[index - 1] in SENTENCE_ENDINGS:
         return True
 
     next_char = text[index]
@@ -188,8 +204,20 @@ def preprocess_text(file_path):
         return split_text(f.read())
 
 
+@lru_cache(maxsize=128)
 def coref_resolve(text):
-    predictor = get_coref_predictor()
+    unavailable_reason = get_coref_unavailable_reason()
+    if unavailable_reason:
+        if os.getenv("COREF_REQUIRED", "0") == "1":
+            raise RuntimeError(unavailable_reason)
+        return text
+
+    try:
+        predictor = get_coref_predictor()
+    except (ImportError, ModuleNotFoundError):
+        if os.getenv("COREF_REQUIRED", "0") == "1":
+            raise
+        return text
     return predictor.coref_resolved(text)
 
 

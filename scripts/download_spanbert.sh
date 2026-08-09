@@ -3,7 +3,9 @@ set -euo pipefail
 
 MODEL_ID="${MODEL_ID:-SpanBERT/spanbert-large-cased}"
 HF_ENDPOINT="${HF_ENDPOINT:-https://huggingface.co}"
-TARGET_DIR="${TARGET_DIR:-/mnt/e/AllenNLP/backend/data/spanbert-large-cased}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+TARGET_DIR="${TARGET_DIR:-$PROJECT_DIR/data/spanbert-large-cased}"
 
 files=(
   "config.json"

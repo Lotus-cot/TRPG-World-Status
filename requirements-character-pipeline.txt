@@ -1,0 +1,5 @@
+# Optional local inference stack for the English BOOKCOREF-style pipeline.
+# Install this only on a machine with enough RAM/VRAM. The base application
+# remains runnable with deterministic English fallbacks when these are absent.
+relik==1.0.6
+maverick-coref==1.0.7
